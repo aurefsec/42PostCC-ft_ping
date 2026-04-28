@@ -1,18 +1,21 @@
 NAME = ft_ping
 
-SRCS =
+SRCS = main.c 			\
+			 setup_data.c
 
 OBJDIR = obj
-OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.s=.o))
+OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 
-GCC = gcc
-GCCFLAGS = -Wall -Werror -Wextra -g
+COMPILER = gcc
+FLAGS = -Wall -Werror -Wextra -g
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(GCCFLAGS) $(NAME) $(OBJS)
+$(NAME):  $(OBJS)
+	$(COMPILER) $(FLAGS) -o $(NAME) $(OBJS)
 
-$(OBJDIR)/%.o: src/%.s | $(OBJDIR) $(GCC) $(GCCFLAGS) $< -o $@
+$(OBJDIR)/%.o: src/%.c | $(OBJDIR) 
+	$(COMPILER) $(FLAGS) -c $< -o $@
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
