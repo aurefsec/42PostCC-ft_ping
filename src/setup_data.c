@@ -2,12 +2,7 @@
 
 int setup_data(int argc, char** argv, t_ping* data)
 {
-  if (argc == 1)
-  {
-    printf("ping: missing host operand\n");
-    printf("Try 'ping -? for more information.\n");
-    return 0;
-  }
+  // Parsing of argument to get domain and options.
   for (int i = 1; i < argc; i++)
   {
     if (argv[i][0] == '-' && strlen(argv[i]) > 1)
@@ -21,13 +16,19 @@ int setup_data(int argc, char** argv, t_ping* data)
         else
         {
           printf("ft_ping: invalid option -- '%c'\n", argv[i][y]);
-          printf("Try 'ping -? for more information.\n");
+          printf("Try 'ft_ping -?' for more information.\n");
           return 0;
         }
       }
     }
     else if (data->domain == NULL)
       data->domain = argv[i];
+  }
+  if (data->domain == NULL || argc == 1)
+  {
+    printf("ft_ping: missing host operand\n");
+    printf("Try 'ft_ping -?' for more information.\n");
+    return 0;
   }
   return 1;
 }
