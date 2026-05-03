@@ -1,6 +1,6 @@
 # include "ft_ping.h"
 
-int setup_data(int argc, char** argv, t_ping* data)
+int parsing(int argc, char** argv, t_ping* data)
 {
   // Parsing of argument to get domain and options.
   for (int i = 1; i < argc; i++)

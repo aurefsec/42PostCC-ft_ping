@@ -1,8 +1,10 @@
 NAME = ft_ping
 
 SRCS = main.c 			\
-			 setup_data.c	\
-			 get_ipv4.c
+			 parsing.c		\
+			 get_ipv4.c		\
+			 set_socket.c	\
+			 icmp_loop.c
 
 OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
