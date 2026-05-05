@@ -1,9 +1,10 @@
 NAME = ft_ping
 
-SRCS = main.c 			\
-			 parsing.c		\
-			 get_ipv4.c		\
-			 set_socket.c	\
+SRCS = main.c 					\
+			 parsing.c				\
+			 get_ipv4.c				\
+			 set_socket.c			\
+			 manage_packet.c	\
 			 icmp_loop.c
 
 OBJDIR = obj

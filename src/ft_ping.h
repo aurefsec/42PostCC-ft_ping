@@ -15,11 +15,12 @@
 
 typedef struct s_ping
 {
-  char* domain;
-  char* ipv4;
-  int   verbose;
-  int   query;
-  int   fd_socket;
+  char*               domain;
+  char*               ipv4;
+  struct sockadrr_in  s_ipv4;
+  int                 verbose;
+  int                 query;
+  int                 fd_socket;
 } t_ping;
 
 // Represents an ICMP packet, size : 64 bytes.
@@ -36,6 +37,7 @@ typedef struct s_icmp_header
 int parsing(int argc, char** argv, t_ping* data);
 int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
-int icmp_loop(t_ping* data);
+int create_packet(t_icmp_header* packet);
+int icmp_loop(t_ping* data, t_icmp_header* packet);
 
 #endif
