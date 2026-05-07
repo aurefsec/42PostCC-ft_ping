@@ -18,27 +18,19 @@ int icmp_loop(t_ping* data);
   while (1)
   {
     if (sentdo(data->fd_socket, &packet, sizeof(t_icmp_header), 0, (struct sockaddr*)&data->s_ipv4, sizeof(struct sockaddr_in)) == -1)
-    {
-      fprintf(stderr, "error sentdo : %s\n", strerror(errno));
-      return 0;
-    }
+      return ERROR_SENDTO;
+
     ret = select(data->fd_socket + 1, &readfds, NULL, NULL, &timeout);
     if (ret == -1)
-    {
-      fprintf(stderr, "error select : %s\n", strerror(errno));
-      return 0;
-    }
-    if (ret > 0)
+      return ERROR_SELECT;
+    else if (ret > 0)
     {
       if (recvfrom(data->fd_socket, buffer, sizeof(buffer), 0, &sender, &sender_len) == -1)
-      {
-        fprintf(stderr, "error select : %s\n", strerror(errno));
-        return 0;
-      }
+        return ERROR_RECVFROM;
     }
     if (!update_packet(&packet, i))
-      return 0;
+      return ERROR_GETTIMEOFDAY;
   }
 
-  return 1;
+  return 0;
 }

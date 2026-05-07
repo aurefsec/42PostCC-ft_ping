@@ -11,10 +11,7 @@ int create_packet(t_icmp_header* packet)
   struct timeval  time;
   memset(&time, 0, sizeof(time));
   if (gettimeofday(&time, NULL) == -1)
-  {
-    fprintf(stderr, "error gettimeofday : %s\n", strerror(errno)); // NEED TO CHECK THE REAL ERROR !
-    return 0;
-  }
+    return ERROR_GETTIMEOFDAY;
   memcpy(packet.data, &time, sizeof(time));
 
   // Checksum calcul.

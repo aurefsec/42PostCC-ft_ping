@@ -13,6 +13,15 @@
 #include <arpa/inet.h>
 #include <errno.h>
 
+#define ERROR_AI_ADDR       1
+#define ERROR_INET_NTOA     2
+#define ERROR_SOCKET        3
+#define ERROR_SETSOCKOPT    4
+#define ERROR_GETTIMEOFDAY  5
+#define ERROR_SENDTO        6
+#define ERROR_SELECT        7
+#define ERROR_RECVFROM      8
+
 typedef struct s_ping
 {
   char*               domain;
@@ -39,5 +48,6 @@ int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
 int create_packet(t_icmp_header* packet);
 int icmp_loop(t_ping* data, t_icmp_header* packet);
+int print_error(int nb);
 
 #endif

@@ -5,7 +5,8 @@ SRCS = main.c 					\
 			 get_ipv4.c				\
 			 set_socket.c			\
 			 manage_packet.c	\
-			 icmp_loop.c
+			 icmp_loop.c			\
+			 print_error.c
 
 OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))

@@ -17,7 +17,7 @@ int parsing(int argc, char** argv, t_ping* data)
         {
           printf("ft_ping: invalid option -- '%c'\n", argv[i][y]);
           printf("Try 'ft_ping -?' for more information.\n");
-          return 0;
+          return 1;
         }
       }
     }
@@ -28,7 +28,7 @@ int parsing(int argc, char** argv, t_ping* data)
   {
     printf("ft_ping: missing host operand\n");
     printf("Try 'ft_ping -?' for more information.\n");
-    return 0;
+    return 1;
   }
-  return 1;
+  return 0;
 }

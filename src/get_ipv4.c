@@ -12,14 +12,13 @@ int get_ipv4(t_ping* data)
   int nb = getaddrinfo(data->domain, NULL, &hints, &result);
   if (nb != 0)
   {
-    fprintf(stderr, "error getaddrinfo: %s\n", gai_strerror(nb));
-    return 0;
+    fprintf(stderr, "ft_ping: error getaddrinfo: %s\n", gai_strerror(nb));
+    return -1;
   }
   if (!result->ai_addr)
   {
-    fprintf(stderr, "error result->ai_adrr = NULL\n");
     freeaddrinfo(result);
-    return 0;
+    return ERROR_AI_ADDR;
   }
 
   // Cast ai_addr to retrieve specifically IPv4 informations and copy it in data struct.
@@ -29,10 +28,10 @@ int get_ipv4(t_ping* data)
   data->ipv4 = inet_ntoa(data->s_ipv4.sin_addr);
   if (!data->ipv4)
   {
-    fprintf(stderr, "error inet_ntoa = NULL\n");
     freeaddrinfo(result);
-    return 0;
+    return ERROR_INET_NTOA;
   }
   freeaddrinfo(result);
-  return 1;
+
+  return 0;
 }
