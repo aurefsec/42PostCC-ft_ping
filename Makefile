@@ -6,6 +6,7 @@ SRCS = main.c 					\
 			 set_socket.c			\
 			 manage_packet.c	\
 			 icmp_loop.c			\
+			 print_info.c			\
 			 print_error.c
 
 OBJDIR = obj
