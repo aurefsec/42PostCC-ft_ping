@@ -3,7 +3,7 @@
 int set_socket(t_ping* data)
 {
   // Socket init.
-  data->fd_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+  data->fd_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP); // Root needed
   if (data->fd_socket == -1)
     return ERROR_SOCKET;
 

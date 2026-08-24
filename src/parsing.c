@@ -2,7 +2,7 @@
 
 int parsing(int argc, char** argv, t_ping* data)
 {
-  // Parsing of argument to get domain and options.
+  // Parse arguments to get domain and options.
   for (int i = 1; i < argc; i++)
   {
     if (argv[i][0] == '-' && strlen(argv[i]) > 1)

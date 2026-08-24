@@ -29,7 +29,7 @@ int icmp_loop(t_ping* data, t_icmp_header* packet)
     {
       if (recvfrom(data->fd_socket, buffer, sizeof(buffer), 0, &sender, &sender_len) == -1)
         return ERROR_RECVFROM;
-      if (check_sender_packet(data, buffer, &sender) == -1)
+      if (check_sender_packet(data, buffer, &pakcet, &sender) == -1)
         continue; // Restart loop if incorrect pid.
     }
     if (!update_packet(&packet, i))
