@@ -2,12 +2,12 @@
 
 int create_packet(t_icmp_header* packet)
 {
-  packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY).
+  packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
   packet->code = 0;
   packet->identifier = (uint16_t)getpid();
-  packet->sequencer = 1; // Index for router jumps.
+  packet->sequencer = 1; // Index for router jumps
 
-  // Copy actual time in data of icmp packet.
+  // Copy actual time in data of icmp packet
   struct timeval  time;
   memset(&time, 0, sizeof(time));
   if (gettimeofday(&time, NULL) == -1)
@@ -15,25 +15,49 @@ int create_packet(t_icmp_header* packet)
   memcpy(packet->data, &time, sizeof(time));
 
   // Checksum calcul.
-  uint32_t  sum = 0; // uint32_t to add each word of packet + carry.
-  uint16_t* word = (uint16_t*)packet; // Each word = 2 bytes.
+  uint32_t  sum = 0; // uint32_t to add each word of packet + carry
+  uint16_t* word = (uint16_t*)packet; // Each word = 2 bytes
   for (int i = 0; i < 32; i++)
     sum += word[i];
-  packet->checksum = (sum >> 16) + (uint16_t)sum; // Get last 16 bytes and add to first 16 bytes (Carry).
-  packet->checksum = ~packet->checksum; // ~ to reverse all bits.
+  packet->checksum = (sum >> 16) + (uint16_t)sum; // Get last 16 bytes and add to first 16 bytes (Carry)
+  packet->checksum = ~packet->checksum; // ~ to reverse all bits
+
+  return 0;
+}
+
+int update_packet(t_icmp_header* packet)
+{
+  packet->checksum = 0;
+  packet->data = 0;
+  packet->sequencer += 1;
+
+  // Retrieve new actual time
+  struct timeval  time;
+  memset(&time, 0, sizeof(time));
+  if (gettimeofday(&time, NULL) == -1)
+    return ERROR_GETTIMEOFDAY;
+  memcpy(packet->data, &time, sizeof(time));
+
+  // Checksum new calcul
+  uint32_t  sum = 0;
+  uint16_t* word = (uint16_t*)packet;
+  for (int i = 0; i < 32; i++)
+    sum += word[i];
+  packet->checksum = (sum >> 16) + (uint16_t)sum;
+  packet->checksum = ~packet->checksum;
 
   return 0;
 }
 
 int check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struct sockadrr_in* sender)
 {
-  int ttl_exceeded = 0;
-  double  rtt;
+  uint8_t ttl = buffer[8]
+  double  rtt = -1;
   struct timeval data_time;
   struct timeval sender_time;
   memset(&data_time, 0, sizeof(data_time));
   memset(&sender_time, 0, sizeof(sender_time));
-  t_icmp_header*  response = (t_icmp_header*)(buffer + 20) // Jump 20 first bytes header.
+  t_icmp_header*  response = (t_icmp_header*)(buffer + 20); // Jump 20 first bytes header
 
   if (response->identifier != (uint16_t)getpid())
     return -1;
@@ -43,13 +67,11 @@ int check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struc
     memcpy(&sender_time, response->data, sizeof(response->data));
     rtt = (data_time.tv_sec - sender_time.tv_sec) * 1000.0 + (data_time.tv_usec - sender_time.tv_usec) / 1000.0;
   }
-  else if (response->type == ICMP_TIME_EXCEEDED)
-    ttl_exceeded = 1;
 
   char* ipv4 = inet_ntoa(sender->sin_addr);
   if (!ipv4)
     ipv4 = "Error struct sockadrr_in* sender";
 
-  // Call print_in_loop() with good parameters.
+  print_in_loop(response, ttl, rtt, data->verbose);
   return 0;
 }

@@ -13,6 +13,8 @@
 #include <arpa/inet.h>
 #include <errno.h>
 
+#define TTL_VALUE 64
+
 #define ERROR_AI_ADDR       1
 #define ERROR_INET_NTOA     2
 #define ERROR_SOCKET        3
@@ -32,7 +34,7 @@ typedef struct s_ping
   int                 fd_socket;
 } t_ping;
 
-// Represents an ICMP packet, size : 64 bytes.
+// Represents an ICMP packet, size : 64 bytes
 typedef struct s_icmp_header
 {
   uint8_t   type;
@@ -48,9 +50,10 @@ int   get_ipv4(t_ping* data);
 int   set_socket(t_ping* data);
 int   create_packet(t_icmp_header* packet);
 int   check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struct sockadrr_in* sender);
+int   update_packet(t_icmp_header* packet);
 int   icmp_loop(t_ping* data, t_icmp_header* packet);
 void  print_before_loop(t_ping* data);
-void  print_in_loop(void);
+void  print_in_loop(t_icmp_header* response, uint8_t ttl, double rtt, int verbose);
 void  print_after_loop(t_ping* data, t_icmp_header* packet);
 int   print_error(int nb);
 

@@ -2,7 +2,6 @@
 
 int icmp_loop(t_ping* data, t_icmp_header* packet)
 {
-  int   i = 0;
   int   ret = 0;
   char  buffer[1024];
   struct sockaddr_in  sender;
@@ -32,7 +31,7 @@ int icmp_loop(t_ping* data, t_icmp_header* packet)
       if (check_sender_packet(data, buffer, &pakcet, &sender) == -1)
         continue; // Restart loop if incorrect pid.
     }
-    if (!update_packet(&packet, i))
+    if (!update_packet(&packet))
       return ERROR_GETTIMEOFDAY;
   }
 

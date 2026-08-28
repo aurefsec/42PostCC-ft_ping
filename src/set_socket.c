@@ -2,13 +2,13 @@
 
 int set_socket(t_ping* data)
 {
-  // Socket init.
+  // Socket init
   data->fd_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP); // Root needed
   if (data->fd_socket == -1)
     return ERROR_SOCKET;
 
-  // Socket option setting.
-  int  ttl = 64; // TTL : Router jumps, linux convention : 64.
+  // Socket option setting
+  int  ttl = TTL_VALUE; // TTL : Router jumps, linux convention : 64
 
   if (setsockopt(data->fd_socket, IPPROTO_IP, IP_TTL, &ttl, sizeof(int)) == -1) // Set TTL option
     return ERROR_SETSOCKOPT;
