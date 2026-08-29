@@ -1,11 +1,20 @@
 #include "ft_ping.h"
 
-int create_packet(t_icmp_header* packet)
+int create_update_packet(t_icmp* packet, int action)
 {
-  packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
-  packet->code = 0;
-  packet->identifier = (uint16_t)getpid();
-  packet->sequencer = 1; // Index for router jumps
+  if (action == CREATE_PACKET)
+  {
+    packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
+    packet->code = 0;
+    packet->identifier = (uint16_t)getpid();
+    packet->sequencer = 1; // Index for router jumps
+  }
+  else if (action == UPDATE_PACKET)
+  {
+    packet->checksum = 0;
+    packet->data = 0;
+    packet->sequencer += 1;
+  }
 
   // Copy actual time in data of icmp packet
   struct timeval  time;
@@ -25,31 +34,7 @@ int create_packet(t_icmp_header* packet)
   return 0;
 }
 
-int update_packet(t_icmp_header* packet)
-{
-  packet->checksum = 0;
-  packet->data = 0;
-  packet->sequencer += 1;
-
-  // Retrieve new actual time
-  struct timeval  time;
-  memset(&time, 0, sizeof(time));
-  if (gettimeofday(&time, NULL) == -1)
-    return ERROR_GETTIMEOFDAY;
-  memcpy(packet->data, &time, sizeof(time));
-
-  // Checksum new calcul
-  uint32_t  sum = 0;
-  uint16_t* word = (uint16_t*)packet;
-  for (int i = 0; i < 32; i++)
-    sum += word[i];
-  packet->checksum = (sum >> 16) + (uint16_t)sum;
-  packet->checksum = ~packet->checksum;
-
-  return 0;
-}
-
-int check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struct sockadrr_in* sender)
+int check_sender_packet(t_ping* data, char* buffer, t_icmp* packet, struct sockadrr_in* sender)
 {
   uint8_t ttl = buffer[8]
   double  rtt = -1;
@@ -57,7 +42,7 @@ int check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struc
   struct timeval sender_time;
   memset(&data_time, 0, sizeof(data_time));
   memset(&sender_time, 0, sizeof(sender_time));
-  t_icmp_header*  response = (t_icmp_header*)(buffer + 20); // Jump 20 first bytes header
+  t_icmp*  response = (t_icmp*)(buffer + 20); // Jump 20 first bytes header
 
   if (response->identifier != (uint16_t)getpid())
     return -1;

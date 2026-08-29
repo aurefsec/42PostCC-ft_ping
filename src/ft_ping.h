@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -13,7 +14,11 @@
 #include <arpa/inet.h>
 #include <errno.h>
 
+int g_sigint = 1;
+
 #define TTL_VALUE 64
+#define CREATE_PACKET 0
+#define UPDATE_PACLET 1
 
 #define ERROR_AI_ADDR       1
 #define ERROR_INET_NTOA     2
@@ -26,16 +31,16 @@
 
 typedef struct s_ping
 {
-  char*               domain;
-  char*               ipv4;
+  char* domain;
+  char* ipv4;
   struct sockadrr_in  s_ipv4;
-  int                 verbose;
-  int                 query;
-  int                 fd_socket;
+  int verbose;
+  int query;
+  int fd_socket;
 } t_ping;
 
 // Represents an ICMP packet, size : 64 bytes
-typedef struct s_icmp_header
+typedef struct s_icmp
 {
   uint8_t   type;
   uint8_t   code;
@@ -43,18 +48,24 @@ typedef struct s_icmp_header
   uint16_t  identifier;
   uint16_t  sequence;
   uint8_t   data[56];
-} s_icmp_header;
+} t_icmp;
+
+typedef struct s_list
+{
+  int transmitted;
+  int reveived;
+  struct s_list next;
+} t_list;
 
 int   parsing(int argc, char** argv, t_ping* data);
 int   get_ipv4(t_ping* data);
 int   set_socket(t_ping* data);
-int   create_packet(t_icmp_header* packet);
-int   check_sender_packet(t_ping* data, char* buffer, t_icmp_header* packet, struct sockadrr_in* sender);
-int   update_packet(t_icmp_header* packet);
-int   icmp_loop(t_ping* data, t_icmp_header* packet);
+int   create_update_packet(t_icmp* packet, int action);
+int   check_sender_packet(t_ping* data, char* buffer, t_icmp* packet, struct sockadrr_in* sender);
+int   icmp_loop(t_ping* data, t_icmp* packet);
 void  print_before_loop(t_ping* data);
-void  print_in_loop(t_icmp_header* response, uint8_t ttl, double rtt, int verbose);
-void  print_after_loop(t_ping* data, t_icmp_header* packet);
+void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose);
+void  print_after_loop(t_ping* data, t_icmp* packet);
 int   print_error(int nb);
 
 #endif

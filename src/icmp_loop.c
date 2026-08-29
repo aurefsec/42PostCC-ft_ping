@@ -1,16 +1,16 @@
 #include "ft_ping.h"
 
-int icmp_loop(t_ping* data, t_icmp_header* packet)
+int icmp_loop(t_ping* data, t_icmp* packet)
 {
-  int   ret = 0;
-  char  buffer[1024];
+  int ret = 0;
+  char buffer[1024];
   struct sockaddr_in  sender;
   socklen_t sender_len = sizeof(struct sockaddr_in);
   fd_set readfds;
   struct timeval  timeout;
 
   print_before_loop(data, packet);
-  while (1)
+  while (g_sigint)
   {
     memset(buffer, 0, sizeof(buffer));
     FD_ZERO(&readfds);
@@ -18,7 +18,7 @@ int icmp_loop(t_ping* data, t_icmp_header* packet)
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 
-    if (sentdo(data->fd_socket, packet, sizeof(t_icmp_header), 0, (struct sockaddr*)&data->s_ipv4, sizeof(struct sockaddr_in)) == -1)
+    if (sentdo(data->fd_socket, packet, sizeof(t_icmp), 0, (struct sockaddr*)&data->s_ipv4, sizeof(struct sockaddr_in)) == -1)
       return ERROR_SENDTO;
 
     ret = select(data->fd_socket + 1, &readfds, NULL, NULL, &timeout);
@@ -31,7 +31,7 @@ int icmp_loop(t_ping* data, t_icmp_header* packet)
       if (check_sender_packet(data, buffer, &pakcet, &sender) == -1)
         continue; // Restart loop if incorrect pid.
     }
-    if (!update_packet(&packet))
+    if (!create_update_packet(&packet, UPDATE_PACKET))
       return ERROR_GETTIMEOFDAY;
   }
 

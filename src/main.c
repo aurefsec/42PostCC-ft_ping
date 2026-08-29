@@ -1,14 +1,20 @@
 # include "ft_ping.h"
 
+void  handler(void)
+{
+  g_sigint = 0;
+}
+
 int main(int argc, char** argv)
 {
-  t_ping          data;
-  t_icmp_header   packet;
+  int ret = 0;
+  t_ping  data;
+  t_icmp  packet;
 
   memset(&data, 0, sizeof(data));
   memset(&packet, 0, sizeof(packet));
 
-  int ret = 0;
+  signal(SIGINT, handler);
 
   if (parsing(argc, argv, &data) > 0)
     return 1;
@@ -17,7 +23,7 @@ int main(int argc, char** argv)
   if ((ret = set_socket(&data)) > 0)
     return print_error(ret);
   printf("data :\ndomain = %s\nipv4 = %s\nverbose = %d\nquery = %d\nfd_socket = %d\n", data.domain, data.ipv4, data.verbose, data.query, data.fd_socket);
-  if ((ret = create_packet(&packet)) > 0)
+  if ((ret = create_update_packet(&packet, CREATE_PACKET)) > 0)
     return print_error(ret);
   if ((ret = icmp_loop(&data, &packet)) > 0)
     return print_error(ret);
