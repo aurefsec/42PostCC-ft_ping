@@ -25,7 +25,7 @@ void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose)
     printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%d ms\n", response->ipv4, response->sequence, ttl, rtt);
 }
 
-void  print_after_loop(t_ping *data)
+void  print_after_loop(t_ping *data, t_statistics* stats)
 {
-
+  printf("--- %s ping statistics ---\n", data->domain);
 }

@@ -50,22 +50,21 @@ typedef struct s_icmp
   uint8_t   data[56];
 } t_icmp;
 
-typedef struct s_list
+typedef struct s_statistics
 {
   int transmitted;
-  int reveived;
-  struct s_list next;
-} t_list;
+  int received;
+} t_statistics;
 
 int   parsing(int argc, char** argv, t_ping* data);
 int   get_ipv4(t_ping* data);
 int   set_socket(t_ping* data);
 int   create_update_packet(t_icmp* packet, int action);
-int   check_sender_packet(t_ping* data, char* buffer, t_icmp* packet, struct sockadrr_in* sender);
-int   icmp_loop(t_ping* data, t_icmp* packet);
+int   check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockadrr_in* sender);
+int   icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
 void  print_before_loop(t_ping* data);
 void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose);
-void  print_after_loop(t_ping* data, t_icmp* packet);
+void  print_after_loop(t_ping* data, t_statistics* stats);
 int   print_error(int nb);
 
 #endif

@@ -1,6 +1,6 @@
 #include "ft_ping.h"
 
-int icmp_loop(t_ping* data, t_icmp* packet)
+int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
 {
   int ret = 0;
   char buffer[1024];
@@ -26,9 +26,10 @@ int icmp_loop(t_ping* data, t_icmp* packet)
       return ERROR_SELECT;
     else if (ret > 0)
     {
+      stats->transmitted += 1;
       if (recvfrom(data->fd_socket, buffer, sizeof(buffer), 0, &sender, &sender_len) == -1)
         return ERROR_RECVFROM;
-      if (check_sender_packet(data, buffer, &pakcet, &sender) == -1)
+      if (check_sender_packet(data, packet, stats, buffer, &sender) == -1)
         continue; // Restart loop if incorrect pid.
     }
     if (!create_update_packet(&packet, UPDATE_PACKET))

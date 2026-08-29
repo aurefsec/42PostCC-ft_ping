@@ -34,7 +34,7 @@ int create_update_packet(t_icmp* packet, int action)
   return 0;
 }
 
-int check_sender_packet(t_ping* data, char* buffer, t_icmp* packet, struct sockadrr_in* sender)
+int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockadrr_in* sender)
 {
   uint8_t ttl = buffer[8]
   double  rtt = -1;
@@ -48,6 +48,7 @@ int check_sender_packet(t_ping* data, char* buffer, t_icmp* packet, struct socka
     return -1;
   if (response->type == ICMP_ECHOREPLY)
   {
+    stats->received += 1;
     memcpy(&data_time, packet->data, sizeof(packet->data));
     memcpy(&sender_time, response->data, sizeof(response->data));
     rtt = (data_time.tv_sec - sender_time.tv_sec) * 1000.0 + (data_time.tv_usec - sender_time.tv_usec) / 1000.0;
