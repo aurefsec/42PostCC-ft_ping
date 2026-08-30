@@ -7,13 +7,13 @@ int create_update_packet(t_icmp* packet, int action)
     packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
     packet->code = 0;
     packet->identifier = (uint16_t)getpid();
-    packet->sequencer = 1; // Index for router jumps
+    packet->sequence = 1; // Index for router jumps
   }
   else if (action == UPDATE_PACKET)
   {
     packet->checksum = 0;
-    packet->data = 0;
-    packet->sequencer += 1;
+    memset(packet->data, 0, sizeof(packet->data));
+    packet->sequence += 1;
   }
 
   // Copy actual time in data of icmp packet
@@ -34,10 +34,10 @@ int create_update_packet(t_icmp* packet, int action)
   return 0;
 }
 
-int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockadrr_in* sender)
+int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockaddr_in* sender)
 {
-  uint8_t ttl = buffer[8]
-  double  rtt = -1;
+  uint8_t ttl = buffer[8];
+  double rtt = -1;
   struct timeval data_time;
   struct timeval sender_time;
   memset(&data_time, 0, sizeof(data_time));
@@ -48,16 +48,16 @@ int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char*
     return -1;
   if (response->type == ICMP_ECHOREPLY)
   {
-    memcpy(&data_time, packet->data, sizeof(packet->data));
-    memcpy(&sender_time, response->data, sizeof(response->data));
+    memcpy(&data_time, packet->data, sizeof(struct timeval));
+    memcpy(&sender_time, response->data, sizeof(struct timeval));
     rtt = (data_time.tv_sec - sender_time.tv_sec) * 1000.0 + (data_time.tv_usec - sender_time.tv_usec) / 1000.0;
-    update_statistics(t_statistics* stats, rtt);
+    update_statistics(stats, rtt);
   }
 
   char* ipv4 = inet_ntoa(sender->sin_addr);
   if (!ipv4)
     ipv4 = "Error struct sockadrr_in* sender";
 
-  print_in_loop(response, ttl, rtt, data->verbose);
+  print_in_loop(data, response, ttl, rtt);
   return 0;
 }

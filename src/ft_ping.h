@@ -15,26 +15,26 @@
 #include <math.h>
 #include <errno.h>
 
-int g_sigint = 1;
+extern int g_sigint;
 
 #define TTL_VALUE 64
 #define CREATE_PACKET 0
-#define UPDATE_PACLET 1
+#define UPDATE_PACKET 1
 
-#define ERROR_AI_ADDR       1
-#define ERROR_INET_NTOA     2
-#define ERROR_SOCKET        3
-#define ERROR_SETSOCKOPT    4
-#define ERROR_GETTIMEOFDAY  5
-#define ERROR_SENDTO        6
-#define ERROR_SELECT        7
-#define ERROR_RECVFROM      8
+#define ERROR_AI_ADDR 1
+#define ERROR_INET_NTOA 2
+#define ERROR_SOCKET 3
+#define ERROR_SETSOCKOPT 4
+#define ERROR_GETTIMEOFDAY 5
+#define ERROR_SENDTO 6
+#define ERROR_SELECT 7
+#define ERROR_RECVFROM 8
 
 typedef struct s_ping
 {
   char* domain;
   char* ipv4;
-  struct sockadrr_in  s_ipv4;
+  struct sockaddr_in s_ipv4;
   int verbose;
   int query;
   int fd_socket;
@@ -43,12 +43,12 @@ typedef struct s_ping
 // Represents an ICMP packet, size : 64 bytes
 typedef struct s_icmp
 {
-  uint8_t   type;
-  uint8_t   code;
-  uint16_t  checksum;
-  uint16_t  identifier;
-  uint16_t  sequence;
-  uint8_t   data[56];
+  uint8_t type;
+  uint8_t code;
+  uint16_t checksum;
+  uint16_t identifier;
+  uint16_t sequence;
+  uint8_t data[56];
 } t_icmp;
 
 typedef struct s_statistics
@@ -56,25 +56,25 @@ typedef struct s_statistics
   int transmitted;
   int received;
   int percentage;
-  double  min;
-  double  max;
-  double  sum;
-  double  sum_sq;
-  double  avg;
-  double  stddev;
+  double min;
+  double max;
+  double sum;
+  double sum_sq;
+  double avg;
+  double stddev;
 } t_statistics;
 
-int   parsing(int argc, char** argv, t_ping* data);
-int   get_ipv4(t_ping* data);
-int   set_socket(t_ping* data);
-int   create_update_packet(t_icmp* packet, int action);
-int   check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockadrr_in* sender);
-int   icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
-void  update_statistics(t_statistics* stats, double rtt);
-void  final_statistics(t_statistics* stats);
-void  print_before_loop(t_ping* data);
-void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose);
-void  print_after_loop(t_ping* data, t_statistics* stats);
-int   print_error(int nb);
+int parsing(int argc, char** argv, t_ping* data);
+int get_ipv4(t_ping* data);
+int set_socket(t_ping* data);
+int create_update_packet(t_icmp* packet, int action);
+int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockaddr_in* sender);
+int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
+void update_statistics(t_statistics* stats, double rtt);
+void final_statistics(t_statistics* stats);
+void print_before_loop(t_ping* data, t_icmp* packet);
+void print_in_loop(t_ping* data, t_icmp* response, uint8_t ttl, double rtt);
+void print_after_loop(t_ping* data, t_statistics* stats);
+int print_error(int nb);
 
 #endif

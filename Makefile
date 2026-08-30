@@ -14,7 +14,7 @@ OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 
 COMPILER = gcc
-FLAGS = -Wall -Werror -Wextra -g
+FLAGS = -Wall -Werror -Wextra -g -lm # -lm for the sqrt() function in math.h library
 
 all: $(NAME)
 

@@ -12,5 +12,5 @@ int set_socket(t_ping* data)
 
   if (setsockopt(data->fd_socket, IPPROTO_IP, IP_TTL, &ttl, sizeof(int)) == -1) // Set TTL option
     return ERROR_SETSOCKOPT;
-  return 1;
+  return 0;
 }
