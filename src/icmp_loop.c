@@ -35,6 +35,8 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
     if (!create_update_packet(&packet, UPDATE_PACKET))
       return ERROR_GETTIMEOFDAY;
   }
-
+  final_statistics(stats);
+  print_after_loop(data, stats);
+  
   return 0;
 }

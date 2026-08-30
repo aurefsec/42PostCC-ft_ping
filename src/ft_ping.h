@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
+#include <math.h>
 #include <errno.h>
 
 int g_sigint = 1;
@@ -54,6 +55,13 @@ typedef struct s_statistics
 {
   int transmitted;
   int received;
+  int percentage;
+  double  min;
+  double  max;
+  double  sum;
+  double  sum_sq;
+  double  avg;
+  double  stddev;
 } t_statistics;
 
 int   parsing(int argc, char** argv, t_ping* data);
@@ -62,6 +70,8 @@ int   set_socket(t_ping* data);
 int   create_update_packet(t_icmp* packet, int action);
 int   check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockadrr_in* sender);
 int   icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
+void  update_statistics(t_statistics* stats, double rtt);
+void  final_statistics(t_statistics* stats);
 void  print_before_loop(t_ping* data);
 void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose);
 void  print_after_loop(t_ping* data, t_statistics* stats);

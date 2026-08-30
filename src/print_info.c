@@ -28,4 +28,6 @@ void  print_in_loop(t_icmp* response, uint8_t ttl, double rtt, int verbose)
 void  print_after_loop(t_ping *data, t_statistics* stats)
 {
   printf("--- %s ping statistics ---\n", data->domain);
+  printf("%d packet transmitted, %d packet received, %d% packet loss\n", stats->transmitted, stats->received, percentage);
+  printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", stats->min, stats->avg, stats->max, stats->stddev);
 }
