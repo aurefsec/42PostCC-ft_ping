@@ -68,7 +68,7 @@ int parsing(int argc, char** argv, t_ping* data);
 int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
 int create_update_packet(t_icmp* packet, int action);
-int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockaddr_in* sender);
+int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer, struct sockaddr_in* sender);
 int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
 void update_statistics(t_statistics* stats, double rtt);
 void final_statistics(t_statistics* stats);

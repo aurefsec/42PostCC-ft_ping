@@ -34,23 +34,23 @@ int create_update_packet(t_icmp* packet, int action)
   return 0;
 }
 
-int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer, struct sockaddr_in* sender)
+int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer, struct sockaddr_in* sender)
 {
   uint8_t ttl = buffer[8];
   double rtt = -1;
-  struct timeval data_time;
   struct timeval sender_time;
-  memset(&data_time, 0, sizeof(data_time));
+  struct timeval now_time;
   memset(&sender_time, 0, sizeof(sender_time));
+  memset(&now_time, 0, sizeof(now_time));
+  gettimeofday(&now_time, NULL);
   t_icmp*  response = (t_icmp*)(buffer + 20); // Jump 20 first bytes header
 
   if (response->identifier != (uint16_t)getpid())
     return -1;
   if (response->type == ICMP_ECHOREPLY)
   {
-    memcpy(&data_time, packet->data, sizeof(struct timeval));
     memcpy(&sender_time, response->data, sizeof(struct timeval));
-    rtt = (data_time.tv_sec - sender_time.tv_sec) * 1000.0 + (data_time.tv_usec - sender_time.tv_usec) / 1000.0;
+    rtt = (now_time.tv_sec - sender_time.tv_sec) * 1000.0 + (now_time.tv_usec - sender_time.tv_usec) / 1000.0;
     update_statistics(stats, rtt);
   }
 
