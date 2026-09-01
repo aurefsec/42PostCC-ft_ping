@@ -27,11 +27,11 @@ int main(int argc, char** argv)
     return print_error(ret);
   if ((ret = set_socket(&data)) > 0)
     return print_error(ret);
-  printf("data :\ndomain = %s\nipv4 = %s\nverbose = %d\nquery = %d\nfd_socket = %d\n\n", data.domain, data.ipv4, data.verbose, data.query, data.fd_socket);
-  if ((ret = create_update_packet(&packet, CREATE_PACKET)) > 0)
-    return print_error(ret);
+  print_before_loop(&data, &packet);
   if ((ret = icmp_loop(&data, &packet, &stats)) > 0)
     return print_error(ret);
+  final_statistics(&stats);
+  print_after_loop(&data, &stats);
 
   return 0;
 }

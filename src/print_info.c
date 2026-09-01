@@ -10,6 +10,8 @@ void  print_before_loop(t_ping* data, t_icmp* packet)
 
 void  print_in_loop(t_ping* data, t_icmp* response, uint8_t ttl, double rtt)
 {
+  if (response->identifier != (uint16_t)getpid())
+    return ;
   if (response->type == ICMP_TIME_EXCEEDED)
   {
     if (data->verbose == false)
@@ -18,8 +20,7 @@ void  print_in_loop(t_ping* data, t_icmp* response, uint8_t ttl, double rtt)
   }
   else if (response->type != ICMP_ECHOREPLY)
   {
-    if (data->verbose == true)
-      printf("unknown response from (%s)\n", data->ipv4);
+    printf("unknown response from (%s)\n", data->ipv4);
   }
   else
     printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%.3f ms\n", data->ipv4, response->sequence, ttl, rtt);

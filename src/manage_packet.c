@@ -2,14 +2,14 @@
 
 int create_update_packet(t_icmp* packet, int action)
 {
-  if (action == CREATE_PACKET)
+  if (action == 0)
   {
     packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
     packet->code = 0;
     packet->identifier = (uint16_t)getpid();
     packet->sequence = 1; // Index for router jumps
   }
-  else if (action == UPDATE_PACKET)
+  else
   {
     packet->checksum = 0;
     memset(packet->data, 0, sizeof(packet->data));
@@ -45,8 +45,6 @@ int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer, struct 
   gettimeofday(&now_time, NULL);
   t_icmp*  response = (t_icmp*)(buffer + 20); // Jump 20 first bytes header
 
-  if (response->identifier != (uint16_t)getpid())
-    return -1;
   if (response->type == ICMP_ECHOREPLY)
   {
     memcpy(&sender_time, response->data, sizeof(struct timeval));

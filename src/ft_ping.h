@@ -17,18 +17,18 @@
 
 extern int g_sigint;
 
-#define TTL_VALUE 64
-#define CREATE_PACKET 0
-#define UPDATE_PACKET 1
+#define TTL_VALUE 1
+#define BUFFER_SIZE 1024
 
-#define ERROR_AI_ADDR 1
-#define ERROR_INET_NTOA 2
-#define ERROR_SOCKET 3
-#define ERROR_SETSOCKOPT 4
-#define ERROR_GETTIMEOFDAY 5
-#define ERROR_SENDTO 6
-#define ERROR_SELECT 7
-#define ERROR_RECVFROM 8
+#define ERROR_ADDRINFO 1
+#define ERROR_AI_ADDR 2
+#define ERROR_INET_NTOA 3
+#define ERROR_SOCKET 4
+#define ERROR_SETSOCKOPT 5
+#define ERROR_GETTIMEOFDAY 6
+#define ERROR_SENDTO 7
+#define ERROR_SELECT 8
+#define ERROR_RECVFROM 9
 
 typedef struct s_ping
 {

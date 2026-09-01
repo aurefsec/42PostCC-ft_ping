@@ -10,13 +10,10 @@ int get_ipv4(t_ping* data)
   hints.ai_family = AF_INET;  // AF_INET to retrieve IPv4
   hints.ai_socktype = SOCK_RAW; // SOCK_RAW to filter and retrieve only info needed 
   int nb = getaddrinfo(data->domain, NULL, &hints, &result);
-  printf("ai_addr = %p\n", result->ai_addr);
-  printf("ai_family = %d\n", result->ai_family);
-  printf("ai_socktype = %d\n", result->ai_socktype);
   if (nb != 0)
   {
-    fprintf(stderr, "ft_ping: error getaddrinfo: %s\n", gai_strerror(nb));
-    return -1;
+    fprintf(stderr, "./ft_ping: %s\n", gai_strerror(nb));
+    return ERROR_ADDRINFO;
   }
   if (!result->ai_addr)
   {
