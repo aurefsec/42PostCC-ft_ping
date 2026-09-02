@@ -11,9 +11,9 @@ void  handler(int nb)
 int main(int argc, char** argv)
 {
   int ret = 0;
-  t_ping  data;
-  t_icmp  packet;
-  t_statistics  stats; 
+  t_ping data;
+  t_icmp packet;
+  t_statistics stats; 
 
   memset(&data, 0, sizeof(data));
   memset(&packet, 0, sizeof(packet));
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   if ((ret = icmp_loop(&data, &packet, &stats)) > 0)
     return print_error(ret);
   final_statistics(&stats);
-  print_after_loop(&data, &stats);
+  print_after_loop(&data, &stats, ret);
 
   return 0;
 }

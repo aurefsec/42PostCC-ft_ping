@@ -51,6 +51,21 @@ typedef struct s_icmp
   uint8_t data[56];
 } t_icmp;
 
+// Needs it if TTL Exceeded to retrieve ip header informations
+typedef struct s_ip_header
+{
+  uint8_t vr_hl;    // Version + header length
+  uint8_t tos;      // Type of service
+  uint16_t len;     // Total length
+  uint16_t id;      // identification
+  uint16_t flg_off; // flag + fragment offset
+  uint8_t ttl;      // Time to leave
+  uint8_t pro;      // Protocol
+  uint16_t cks;     // Cheksum
+  uint32_t src;     // Source address
+  uint32_t dst;     // Destination address
+} t_ip_header;
+
 typedef struct s_statistics
 {
   int transmitted;
@@ -68,13 +83,13 @@ int parsing(int argc, char** argv, t_ping* data);
 int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
 int create_update_packet(t_icmp* packet, int action);
-int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer, struct sockaddr_in* sender);
+int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer);
 int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
 void update_statistics(t_statistics* stats, double rtt);
 void final_statistics(t_statistics* stats);
 void print_before_loop(t_ping* data, t_icmp* packet);
-void print_in_loop(t_ping* data, t_icmp* response, uint8_t ttl, double rtt);
-void print_after_loop(t_ping* data, t_statistics* stats);
+void print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t ttl, double rtt);
+void print_after_loop(t_ping* data, t_statistics* stats, int ret);
 int print_error(int nb);
 
 #endif

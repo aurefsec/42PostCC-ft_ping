@@ -27,17 +27,16 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
       return ERROR_SENDTO;
     stats->transmitted += 1;
     ret = select(data->fd_socket + 1, &readfds, NULL, NULL, &timeout);
-    printf("ret = %d\n", ret);
     if (ret == -1)
       return ERROR_SELECT;
     else if (ret > 0)
     {
       if (recvfrom(data->fd_socket, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&sender, &sender_len) == -1)
         return ERROR_RECVFROM;
-      check_sender_packet(data, stats, buffer, &sender);
+      ret = check_sender_packet(data, stats, buffer);
     }
     sleep(1); 
   }
   
-  return 0;
+  return ret;
 }
