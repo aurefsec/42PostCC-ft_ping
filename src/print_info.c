@@ -8,7 +8,7 @@ void  print_before_loop(t_ping* data, t_icmp* packet)
     printf("PING %s (%s): 56 data bytes, id 0x%04x = %d\n", data->domain, data->ipv4, packet->identifier, packet->identifier);
 }
 
-void  print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t ttl, double rtt)
+void  print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h)
 {
   if (response->type == ICMP_TIME_EXCEEDED)
   {
@@ -21,7 +21,7 @@ void  print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t t
       for (int i = 0; i < 10; i++)
       {
         words = *((uint16_t*)ip_h + (i * 2));
-        printf("%04x ", words);
+        printf(" %04x", words);
       }
       printf("\n");
       printf("VR HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst     Data\n");
@@ -29,8 +29,8 @@ void  print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t t
              ip_h->vr_hl >> 4, ip_h->vr_hl & 0x0F, ip_h->tos, ip_h->len, ip_h->id,
              ip_h->flg_off >> 3, ip_h->flg_off & 0x1FFF, ip_h->ttl, ip_h->pro, ip_h->cks,
              inet_ntoa(*(struct in_addr*)&ip_h->src), inet_ntoa(*(struct in_addr*)&ip_h->dst));
-      printf("ICMP: type %d, code %d, size 64, id %04x, seq %04x\n", response->type, response->code,
-             response->identifier, response->sequence);
+      printf("ICMP: type %d, code %d, size 64, id 0x%04x, seq 0x%04x\n", packet->type, packet->code,
+             packet->identifier, packet->sequence);
     }
   }
   else if (response->type != ICMP_ECHOREPLY)
@@ -40,7 +40,8 @@ void  print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t t
   else if (response->identifier != (uint16_t)getpid())
     return ;
   else
-    printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%.3f ms\n", data->ipv4, response->sequence, ttl, rtt);
+    printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%.3f ms\n", 
+           data->ipv4, response->sequence, data->ttl, data->rtt);
 }
 
 void  print_after_loop(t_ping *data, t_statistics* stats, int ret)

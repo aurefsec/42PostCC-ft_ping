@@ -38,6 +38,8 @@ typedef struct s_ping
   int verbose;
   int query;
   int fd_socket;
+  double rtt;
+  uint8_t ttl;
 } t_ping;
 
 // Represents an ICMP packet, size : 64 bytes
@@ -83,12 +85,12 @@ int parsing(int argc, char** argv, t_ping* data);
 int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
 int create_update_packet(t_icmp* packet, int action);
-int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer);
+int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer);
 int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats);
 void update_statistics(t_statistics* stats, double rtt);
 void final_statistics(t_statistics* stats);
 void print_before_loop(t_ping* data, t_icmp* packet);
-void print_in_loop(t_ping* data, t_icmp* response, t_ip_header* ip_h, uint8_t ttl, double rtt);
+void print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h);
 void print_after_loop(t_ping* data, t_statistics* stats, int ret);
 int print_error(int nb);
 

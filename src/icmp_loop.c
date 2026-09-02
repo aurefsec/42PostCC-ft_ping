@@ -33,7 +33,7 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
     {
       if (recvfrom(data->fd_socket, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&sender, &sender_len) == -1)
         return ERROR_RECVFROM;
-      ret = check_sender_packet(data, stats, buffer);
+      ret = check_sender_packet(data, packet, stats, buffer);
     }
     sleep(1); 
   }

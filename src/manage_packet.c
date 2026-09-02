@@ -34,11 +34,9 @@ int create_update_packet(t_icmp* packet, int action)
   return 0;
 }
 
-int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer)
+int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer)
 {
   int ret = 0;
-  uint8_t ttl = buffer[8];
-  double rtt = -1;
   struct timeval sender_time;
   struct timeval now_time;
   memset(&sender_time, 0, sizeof(sender_time));
@@ -46,17 +44,18 @@ int check_sender_packet(t_ping* data, t_statistics* stats, char* buffer)
   gettimeofday(&now_time, NULL);
   t_icmp*  response = (t_icmp*)(buffer + 20); // Jump 20 first bytes header
   t_ip_header *ip_h = (t_ip_header*)(buffer + 28); // Jump 28 first bytes header
-
+  data->ttl = buffer[8];
+  data->rtt = -1;
 
   if (response->type == ICMP_ECHOREPLY)
   {
     memcpy(&sender_time, response->data, sizeof(struct timeval));
-    rtt = (now_time.tv_sec - sender_time.tv_sec) * 1000.0 + (now_time.tv_usec - sender_time.tv_usec) / 1000.0;
-    update_statistics(stats, rtt);
+    data->rtt = (now_time.tv_sec - sender_time.tv_sec) * 1000.0 + (now_time.tv_usec - sender_time.tv_usec) / 1000.0;
+    update_statistics(stats, data->rtt);
   }
   else if (response->type == ICMP_TIME_EXCEEDED)
     ret = -1;
 
-  print_in_loop(data, response, ip_h, ttl, rtt);
+  print_in_loop(data, packet, response, ip_h);
   return ret;
 }
