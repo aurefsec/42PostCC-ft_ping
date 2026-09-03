@@ -34,10 +34,10 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
         return ERROR_RECVFROM;
       data->src_ipv4 = inet_ntoa(sender.sin_addr);
       ret = check_sender_packet(data, packet, stats, buffer);
-    }
+    } 
+    sleep(1);
     if (create_update_packet(packet, UPDATE_PACKET) > 0)
       return ERROR_GETTIMEOFDAY;
-    sleep(1); 
   }
   
   return ret;

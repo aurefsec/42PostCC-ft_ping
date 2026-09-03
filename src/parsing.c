@@ -13,6 +13,24 @@ int parsing(int argc, char** argv, t_ping* data)
           data->verbose = 1;
         else if (argv[i][y] == '?')
           data->query = 1;
+        else if (argv[i][y] == 'c')
+        {
+          if ((i + 1) <= argc)
+          {
+            printf("./ft_ping: option requires an argument -- 'c'\n");
+            printf("Try 'ft_ping -?' for more information.\n");
+            return 1;
+          }
+          i++;
+          if (argv[i][0] == '0' && strlen(argv[i]) == 1)
+            return 0;
+          data->count = atoi(argv[i]);
+          if (data->count == 0)
+          {
+            printf("./ping: invalid value (`%s' near `%s'\n)", argv[i], argv[i]);
+            return 1;
+          }
+        }
         else
         {
           printf("ft_ping: invalid option -- '%c'\n", argv[i][y]);

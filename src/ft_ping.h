@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <netdb.h>
 #include <sys/types.h>
@@ -17,7 +18,7 @@
 
 extern int g_sigint;
 
-#define TTL_VALUE 1
+#define TTL_VALUE 64
 #define BUFFER_SIZE 1024
 #define CREATE_PACKET 0
 #define UPDATE_PACKET 1
@@ -40,9 +41,11 @@ typedef struct s_ping
   struct sockaddr_in s_dst_ipv4;
   int verbose;
   int query;
+  int count;
+  int ttla;
   int fd_socket;
   double rtt;
-  uint8_t ttl;
+  uint8_t ttl_remain;
 } t_ping;
 
 // Represents an ICMP packet, size : 64 bytes

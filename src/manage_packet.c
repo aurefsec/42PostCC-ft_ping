@@ -44,7 +44,7 @@ int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char*
   gettimeofday(&now_time, NULL);
   t_icmp*  response = (t_icmp*)(buffer + 20); // Jump 20 first bytes header
   t_ip_header *ip_h = (t_ip_header*)(buffer + 28); // Jump 28 first bytes header
-  data->ttl = buffer[8];
+  data->ttl_remain = buffer[8];
   data->rtt = -1;
 
   if (response->type == ICMP_ECHOREPLY)

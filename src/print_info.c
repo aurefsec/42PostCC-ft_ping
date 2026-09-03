@@ -26,7 +26,7 @@ void  print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header*
       for (int i = 0; i < 10; i++)
       {
         word = ntohs(*((uint16_t*)ip_h + i)); // Using ntohs to swap from litle-endian to big-endian
-        printf(" %04x", wordd);
+        printf(" %04x", word);
       }
       printf("\n");
       printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst     Data\n");
@@ -46,7 +46,7 @@ void  print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header*
     return ;
   else
     printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%.3f ms\n", 
-           data->dst_ipv4, response->sequence, data->ttl, data->rtt);
+           data->dst_ipv4, response->sequence, data->ttl_remain, data->rtt);
 }
 
 void  print_after_loop(t_ping *data, t_statistics* stats, int ret)
