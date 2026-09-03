@@ -20,10 +20,9 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
 
   for (int i = 0; g_sigint; i++)
   {
+    (void) i;
     set_values(data, buffer, &readfds, &timeout);
-    if (create_update_packet(packet, i) > 0)
-      return ERROR_GETTIMEOFDAY;
-    if (sendto(data->fd_socket, packet, sizeof(t_icmp), 0, (struct sockaddr*)&data->s_ipv4, sizeof(struct sockaddr_in)) == -1)
+    if (sendto(data->fd_socket, packet, sizeof(t_icmp), 0, (struct sockaddr*)&data->s_dst_ipv4, sizeof(struct sockaddr_in)) == -1)
       return ERROR_SENDTO;
     stats->transmitted += 1;
     ret = select(data->fd_socket + 1, &readfds, NULL, NULL, &timeout);
@@ -33,8 +32,11 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
     {
       if (recvfrom(data->fd_socket, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&sender, &sender_len) == -1)
         return ERROR_RECVFROM;
+      data->src_ipv4 = inet_ntoa(sender.sin_addr);
       ret = check_sender_packet(data, packet, stats, buffer);
     }
+    if (create_update_packet(packet, UPDATE_PACKET) > 0)
+      return ERROR_GETTIMEOFDAY;
     sleep(1); 
   }
   

@@ -27,6 +27,8 @@ int main(int argc, char** argv)
     return print_error(ret);
   if ((ret = set_socket(&data)) > 0)
     return print_error(ret);
+  if ((ret = create_update_packet(&packet, CREATE_PACKET) > 0))
+    return print_error(ret);
   print_before_loop(&data, &packet);
   if ((ret = icmp_loop(&data, &packet, &stats)) > 0)
     return print_error(ret);

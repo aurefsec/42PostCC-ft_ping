@@ -2,14 +2,14 @@
 
 int create_update_packet(t_icmp* packet, int action)
 {
-  if (action == 0)
+  if (action == CREATE_PACKET)
   {
     packet->type = ICMP_ECHO; // Type value : 8, type return : 0 (ICMP_ECHOREPLY)
     packet->code = 0;
     packet->identifier = (uint16_t)getpid();
-    packet->sequence = 1; // Index for router jumps
+    packet->sequence = 0; // Index for router jumps
   }
-  else
+  else if (action == UPDATE_PACKET)
   {
     packet->checksum = 0;
     memset(packet->data, 0, sizeof(packet->data));

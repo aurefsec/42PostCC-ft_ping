@@ -19,6 +19,8 @@ extern int g_sigint;
 
 #define TTL_VALUE 1
 #define BUFFER_SIZE 1024
+#define CREATE_PACKET 0
+#define UPDATE_PACKET 1
 
 #define ERROR_ADDRINFO 1
 #define ERROR_AI_ADDR 2
@@ -33,8 +35,9 @@ extern int g_sigint;
 typedef struct s_ping
 {
   char* domain;
-  char* ipv4;
-  struct sockaddr_in s_ipv4;
+  char* src_ipv4;
+  char* dst_ipv4;
+  struct sockaddr_in s_dst_ipv4;
   int verbose;
   int query;
   int fd_socket;
