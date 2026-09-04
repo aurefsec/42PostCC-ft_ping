@@ -18,6 +18,7 @@ int main(int argc, char** argv)
   memset(&data, 0, sizeof(data));
   memset(&packet, 0, sizeof(packet));
   memset(&stats, 0, sizeof(stats));
+  data.count = -1;
 
   signal(SIGINT, handler);
 
