@@ -88,6 +88,8 @@ typedef struct s_statistics
 } t_statistics;
 
 int parsing(int argc, char** argv, t_ping* data);
+int is_valid_count(char* arg int i)
+char* substr(char* src, unsigned int start, size_t len);
 int get_ipv4(t_ping* data);
 int set_socket(t_ping* data);
 int create_update_packet(t_icmp* packet, int action);

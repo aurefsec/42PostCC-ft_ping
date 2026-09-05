@@ -10,8 +10,17 @@ void query_arg(t_ping* data)
   data->query = 1;
 }
 
-int count_arg(t_ping* data, char** argv, int argc, int* i)
+int count_arg(t_ping* data, char** argv, int argc, int* i, int* y)
 {
+  if (argv[*i][(*y) + 1])
+  {
+    (*y)++;
+    if (is_valid_count(argv[*i], *y) == 1)
+    {
+      printf("./ping: invalid value (`%s' near `%s')\n", argv[*i], argv[*i]);
+    }
+    data->count = atoi(argv[*i][*y])
+  }
   if (((*i) + 1) > (argc - 1))
   {
     printf("./ft_ping: option requires an argument -- 'c'\n");
@@ -25,9 +34,7 @@ int count_arg(t_ping* data, char** argv, int argc, int* i)
     printf("./ping: invalid value (`%s' near `%s')\n", argv[*i], argv[*i]);
     return 1;
   }
-  printf ("count = %d, i = %d\n", data->count, *i);
   return 0;
-
 }
 
 int parsing(int argc, char** argv, t_ping* data)
@@ -48,8 +55,7 @@ int parsing(int argc, char** argv, t_ping* data)
           query_arg(data);
         else if (argv[i][y] == 'c')
         {
-          printf("coucou count\n");
-          if (count_arg(data, argv, argc, &i) == 1)
+          if (count_arg(data, argv, argc, &i, &y) == 1)
             return 1;
           else
             break;
@@ -64,7 +70,6 @@ int parsing(int argc, char** argv, t_ping* data)
     }
     else if (data->domain == NULL)
       data->domain = argv[i];
-    printf("i = %d, argc = %d\n", i, argc);
     if (i == (argc - 1))
       break;
     i++;
