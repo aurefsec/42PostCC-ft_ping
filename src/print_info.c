@@ -1,19 +1,19 @@
 #include "ft_ping.h"
 
-void  print_before_loop(t_ping* data, t_icmp* packet)
+void  print_before_loop(t_option* opt, t_ping* data, t_icmp* packet)
 {
-  if (data->verbose == false)
+  if (opt->verbose == false)
     printf("PING %s (%s): 56 data bytes\n", data->domain, data->dst_ipv4);
   else
     printf("PING %s (%s): 56 data bytes, id 0x%04x = %d\n", data->domain, data->dst_ipv4, packet->identifier, packet->identifier);
 }
 
-void  print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h)
+void  print_in_loop(t_option* opt, t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h)
 {
   if (response->type == ICMP_TIME_EXCEEDED)
   {
     printf("36 bytes from _gateway (%s): Time to live exceeded\n", data->src_ipv4);
-    if (data->verbose == true)
+    if (opt->verbose == true)
     {
       uint16_t word;
       char src[16];
@@ -21,7 +21,7 @@ void  print_in_loop(t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header*
       strcpy(src, inet_ntoa(*(struct in_addr*)&ip_h->src)); // Using strcpy because inet_ntoa uses static buffer
       strcpy(dst, inet_ntoa(*(struct in_addr*)&ip_h->dst));
 
-      // IP Hdr Dunp : Read the 20 bytes of ip_h and write it 2 bytes by 2 bytes
+      // IP Hdr Dump : Read the 20 bytes of ip_h and write it 2 bytes by 2 bytes
       printf("IP Hdr Dump:\n");
       for (int i = 0; i < 10; i++)
       {

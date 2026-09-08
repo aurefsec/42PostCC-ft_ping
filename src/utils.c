@@ -1,14 +1,12 @@
 #include "ft_ping.h"
 
-int is_valid_count(char* arg, int i)
+int is_valid_number(char* arg)
 {
-  while (arg[i])
-  {
-    if (arg[i] < '0' && arg[i] > '9')
-      return 1;
-    i++;
-  } 
-  return 0;
+  int i = 0;
+
+  while (arg[i] >= '0' && arg[i] <= '9')
+      i++;
+  return i;
 }
 
 char* substr(char* src, unsigned int start, size_t len)

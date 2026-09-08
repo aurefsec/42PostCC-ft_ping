@@ -34,7 +34,7 @@ int create_update_packet(t_icmp* packet, int action)
   return 0;
 }
 
-int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer)
+int check_sender_packet(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer)
 {
   int ret = 0;
   struct timeval sender_time;
@@ -56,6 +56,6 @@ int check_sender_packet(t_ping* data, t_icmp* packet, t_statistics* stats, char*
   else if (response->type == ICMP_TIME_EXCEEDED)
     ret = -1;
 
-  print_in_loop(data, packet, response, ip_h);
+  print_in_loop(opt, data, packet, response, ip_h);
   return ret;
 }

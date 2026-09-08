@@ -9,7 +9,7 @@ void  set_values(t_ping* data, char* buffer, fd_set* readfds, struct timeval* ti
   timeout->tv_usec = 0;
 }
 
-int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
+int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats)
 {
   int ret = 0;
   char buffer[1024];
@@ -32,10 +32,10 @@ int icmp_loop(t_ping* data, t_icmp* packet, t_statistics* stats)
       if (recvfrom(data->fd_socket, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&sender, &sender_len) == -1)
         return ERROR_RECVFROM;
       data->src_ipv4 = inet_ntoa(sender.sin_addr);
-      ret = check_sender_packet(data, packet, stats, buffer);
+      ret = check_sender_packet(opt, data, packet, stats, buffer);
     } 
     sleep(1);
-    if ((i + 1) == data->count)
+    if ((i + 1) == opt->count)
       break;
     if (create_update_packet(packet, UPDATE_PACKET) > 0)
       return ERROR_GETTIMEOFDAY;
