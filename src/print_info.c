@@ -63,7 +63,7 @@ void  print_in_loop(t_option* opt, t_ping* data, t_icmp* packet, t_icmp* respons
   else if (response->identifier != (uint16_t)getpid())
     return ;
   else
-    printf("64 bytes from (%s): icmp_seq=%d ttl=%d time=%.3f ms\n", 
+    printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", 
            data->dst_ipv4, response->sequence, data->ttl_remain, data->rtt);
 }
 

@@ -3,6 +3,7 @@ NAME = ft_ping
 SRCS = main.c 					\
 			 parsing.c				\
 			 utils.c					\
+			 lst_utils.c			\
 			 get_ipv4.c				\
 			 set_socket.c			\
 			 manage_packet.c	\

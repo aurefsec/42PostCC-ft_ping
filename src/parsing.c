@@ -149,11 +149,12 @@ int one_hyphen(int argc, char** argv, t_option* opt, int* i)
   return 0;
 }
 
-int parsing(int argc, char** argv, t_option* opt, t_ping* data)
+int parsing(int argc, char** argv, t_option* opt, t_ping** data)
 {
   int i = 1;
+  t_ping* tmp = NULL;
 
-  // Parse arguments to get domain and options.
+  // Parse arguments to get domains and options.
   while (i < argc)
   {
     if (strlen(argv[i]) > 2 && argv[i][0] == '-' && argv[i][1] == '-')
@@ -166,13 +167,27 @@ int parsing(int argc, char** argv, t_option* opt, t_ping* data)
       if (one_hyphen(argc, argv, opt, &i) == 1)
         return 1;
     }
-    else if (data->domain == NULL)
-      data->domain = argv[i];
+    else if (*data == NULL)
+    {
+      *data = data_new(NULL);
+      if (*data == NULL)
+        return 1;
+      memset(*data, 0, sizeof(t_ping));
+      (*data)->domain = argv[i];
+      tmp = *data;
+    }
+    else
+    {
+      tmp->next = data_new(argv[i]);
+      tmp = tmp->next;
+      if (tmp == NULL)
+        return 1;
+    }
     if (i == (argc - 1))
       break;
     i++;
   }
-  if (data->domain == NULL || argc == 1)
+  if ((*data)->domain == NULL || argc == 1)
   {
     printf("ft_ping: missing host operand\n");
     printf("Try 'ft_ping -?' for more information.\n");

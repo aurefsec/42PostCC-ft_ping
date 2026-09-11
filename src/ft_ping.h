@@ -46,12 +46,11 @@ typedef struct s_ping
   char* src_ipv4;
   char* dst_ipv4;
   struct sockaddr_in s_dst_ipv4;
-  int verbose;
-  int count;
   int fd_socket;
   int recvfrom_ret;
   double rtt;
   uint8_t ttl_remain;
+  struct s_ping* next;
 } t_ping;
 
 // Represents an ICMP packet, size : 64 bytes
@@ -93,8 +92,9 @@ typedef struct s_statistics
   double stddev;
 } t_statistics;
 
-int parsing(int argc, char** argv, t_option* opt, t_ping* data);
+int parsing(int argc, char** argv, t_option* opt, t_ping** data);
 int is_valid_number(char* arg);
+t_ping* data_new(char* domain);
 char* substr(char* src, unsigned int start, size_t len);
 int get_ipv4(t_ping* data);
 int set_socket(t_option* opt, t_ping* data);
