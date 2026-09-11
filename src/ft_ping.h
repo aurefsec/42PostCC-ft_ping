@@ -49,6 +49,7 @@ typedef struct s_ping
   int verbose;
   int count;
   int fd_socket;
+  int recvfrom_ret;
   double rtt;
   uint8_t ttl_remain;
 } t_ping;
@@ -102,6 +103,7 @@ int check_sender_packet(t_option* opt, t_ping* data, t_icmp* packet, t_statistic
 int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats);
 void update_statistics(t_statistics* stats, double rtt);
 void final_statistics(t_statistics* stats);
+void print_query(void);
 void print_before_loop(t_option* opt, t_ping* data, t_icmp* packet);
 void print_in_loop(t_option* opt, t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h);
 void print_after_loop(t_ping* data, t_statistics* stats, int ret);

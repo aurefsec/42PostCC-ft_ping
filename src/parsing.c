@@ -1,25 +1,24 @@
 # include "ft_ping.h"
 
-void query_arg(t_option* opt)
-{
-  (void)opt;
-}
-
-void verbose_arg(t_option* opt)
-{
-  opt->verbose = 1;
-}
-
 int count_arg(int argc, char** argv, t_option* opt, int* i, int* y)
 {
-  if (argv[*i][(*y) + 1])
-    (*y)++;
-  else if (((*i) + 1) <= (argc - 1))
+  if (*y == -1)
   {
-    (*i)++;
-    (*y) = 0;
+    *y = 7; 
+    if (argv[*i][*y] == '=')
+      (*y)++;
   }
-  else
+  else if (argv[*i][*y] == 'c')
+    (*y)++;
+  if (argv[*i][*y] == 0 && ((*i) + 1) <= (argc - 1))
+  {
+    if (argv[*i][(*y) - 1] == 'c' || argv[*i][(*y) - 1] == 't')
+    { 
+      (*i)++;
+      (*y) = 0;
+    }
+  }
+  else if (argv[*i][*y] == 0 && ((*i) + 1) > (argc - 1))
   {
     printf("./ft_ping: option requires an argument -- 'c'\n");
     printf("Try 'ft_ping -?' for more information.\n");
@@ -54,7 +53,7 @@ int ttl_arg(int argc, char** argv, t_option* opt, int *i)
 
   if (argv[*i][y] == '=')
     y++;
-  else if (argv[*i][y] == 0 && ((*i) + 1) <= (argc - 1)) 
+  if (argv[*i][y] == 0 && ((*i) + 1) <= (argc - 1) && argv[*i][y - 1] == 'l') 
   {
     (*i)++;
     y = 0;
@@ -64,13 +63,7 @@ int ttl_arg(int argc, char** argv, t_option* opt, int *i)
     printf("./ft_ping: option requires an argument -- 'c'\n");
     printf("Try 'ft_ping -?' for more information.\n");
     return 1;
-  }
-  else
-  {
-    printf("./ft_ping: unrecognized option '%s'\n", argv[*i]);
-    printf("Try 'ft_ping -?' for more information.\n");
-    return 1;
-  }
+  } 
   char* str1 = substr(argv[*i], y, strlen(argv[*i]));
   if (str1 == NULL)
   {
@@ -81,12 +74,22 @@ int ttl_arg(int argc, char** argv, t_option* opt, int *i)
   if (ret == strlen(str1))
   {
     opt->ttl = atoi(str1);
+    if (opt->ttl < 1)
+    {
+      printf("./ft_ping: option value too small: %d\n", opt->ttl);
+      return 1;
+    }
+    else if (opt->ttl > 255)
+    {
+      printf("./ft_ping: option value too big: %d\n", opt->ttl);
+      return 1;
+    }
     free(str1);
   }
   else
   {
     char* str2 = substr(str1, ret, strlen(str1));
-    printf("./ping: invalid value (`%s' near `%s')\n", str1, str2);
+    printf("./ft_ping: invalid value (`%s' near `%s')\n", str1, str2);
     free(str1);
     free(str2);
     return 1;
@@ -96,12 +99,24 @@ int ttl_arg(int argc, char** argv, t_option* opt, int *i)
 
 int double_hyphen(int argc, char** argv, t_option* opt, int* i)
 {
-  size_t len = strlen(argv[*i]);
-
-  if (len >= 5 && argv[*i][2] == 't' && argv[*i][3] == 't' && argv[*i][4] =='l')
+  if (strcmp(argv[*i], "--verbose") == 0)
+    opt->verbose = 1;
+  else if (strncmp(argv[*i], "--count", 7) == 0 && (argv[*i][7] == '=' || argv[*i][7] == 0))
+  {
+    int y = -1;
+    if (count_arg(argc, argv, opt, i, &y) == 1)
+      return 1;
+  }
+  else if (strncmp(argv[*i], "--ttl", 5) == 0 && (argv[*i][5] == '=' || argv[*i][5] == 0))
   {
     if (ttl_arg(argc, argv, opt, i) == 1)
       return 1;
+  }
+  else
+  {
+    printf("./ft_ping: unrecognized option '%s'\n", argv[*i]);
+    printf("Try 'ft_ping -?' for more information.\n");
+    return 1;
   }
   return 0;
 }
@@ -111,9 +126,12 @@ int one_hyphen(int argc, char** argv, t_option* opt, int* i)
   for (int y = 1; argv[*i][y]; y++)
   {
     if (argv[*i][y] == '?')
-      query_arg(opt);
+    {
+      print_query();
+      return 1;
+    }
     else if (argv[*i][y] == 'v')
-      verbose_arg(opt);
+      opt->verbose = 1;
     else if (argv[*i][y] == 'c')
     {
       if (count_arg(argc, argv, opt, i, &y) == 1)

@@ -1,5 +1,23 @@
 #include "ft_ping.h"
 
+void print_query(void)
+{
+  printf("Usage: ping [OPTION...] HOST ...\n");
+  printf("\n");
+  printf("Send ICMP ECHO_REQUEST packets to network hosts.\n");
+  printf("\n");
+  printf("Options valid for all request types:\n");
+  printf("\n");
+  printf("  -c, --count=NUMBER         stop after sending NUMBER packets\n");
+  printf("      --ttl=N                specify N as time-to-live\n");
+  printf("  -v, --verbose              verbose output\n");
+  printf("\n");
+  printf("Mandatory or optional arguments to long options are also mandatory or optional\n");
+  printf("for any corresponding short options.\n");
+  printf("\n");
+  printf("Report bugs to auferran/aurefsec.\n");
+}
+
 void  print_before_loop(t_option* opt, t_ping* data, t_icmp* packet)
 {
   if (opt->verbose == false)
@@ -12,7 +30,7 @@ void  print_in_loop(t_option* opt, t_ping* data, t_icmp* packet, t_icmp* respons
 {
   if (response->type == ICMP_TIME_EXCEEDED)
   {
-    printf("36 bytes from _gateway (%s): Time to live exceeded\n", data->src_ipv4);
+    printf("%d bytes from _gateway (%s): Time to live exceeded\n", data->recvfrom_ret, data->src_ipv4);
     if (opt->verbose == true)
     {
       uint16_t word;
