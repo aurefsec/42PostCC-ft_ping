@@ -23,8 +23,11 @@ void  update_statistics(t_statistics* stats, double rtt)
 
 void  final_statistics(t_statistics* stats)
 {
-  stats->percentage = 100 - (100 * stats->received / stats->transmitted);
-  stats->avg = stats->sum / stats->received;
-  stats->stddev = sqrt((stats->sum_sq / stats->received) - (stats->avg * stats->avg)) ;
+  if (stats->transmitted != 0) // Divide by 0 protection
+    stats->percentage = 100 - (100 * stats->received / stats->transmitted);
+  if (stats->received != 0)
+    stats->avg = stats->sum / stats->received;
+  if (stats->received != 0)
+    stats->stddev = sqrt((stats->sum_sq / stats->received) - (stats->avg * stats->avg)) ;
 }
 

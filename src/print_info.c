@@ -71,6 +71,6 @@ void  print_after_loop(t_ping *data, t_statistics* stats, int ret)
 {
   printf("--- %s ping statistics ---\n", data->domain);
   printf("%d packets transmitted, %d packets received, %d%% packet loss\n", stats->transmitted, stats->received, stats->percentage);
-  if (ret == 0)
+  if (ret == 0 && stats->received > 0)
     printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", stats->min, stats->avg, stats->max, stats->stddev);
 }

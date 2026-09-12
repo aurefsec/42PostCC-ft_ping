@@ -12,7 +12,7 @@ int get_ipv4(t_ping* data)
   int nb = getaddrinfo(data->domain, NULL, &hints, &result);
   if (nb != 0)
   {
-    fprintf(stderr, "./ft_ping: %s\n", gai_strerror(nb));
+    fprintf(stderr, "./ft_ping: unknown host\n");
     return ERROR_ADDRINFO;
   }
   if (!result->ai_addr)

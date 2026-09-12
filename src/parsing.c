@@ -169,25 +169,19 @@ int parsing(int argc, char** argv, t_option* opt, t_ping** data)
     }
     else if (*data == NULL)
     {
-      *data = data_new(NULL);
-      if (*data == NULL)
+      if (create_first_data(data, &tmp, argv[i]) == 1)
         return 1;
-      memset(*data, 0, sizeof(t_ping));
-      (*data)->domain = argv[i];
-      tmp = *data;
     }
     else
     {
-      tmp->next = data_new(argv[i]);
-      tmp = tmp->next;
-      if (tmp == NULL)
+      if (create_node_data(&tmp, argv[i]) == 1)
         return 1;
     }
     if (i == (argc - 1))
       break;
     i++;
   }
-  if ((*data)->domain == NULL || argc == 1)
+  if (*data == NULL || argc == 1)
   {
     printf("ft_ping: missing host operand\n");
     printf("Try 'ft_ping -?' for more information.\n");

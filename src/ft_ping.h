@@ -95,6 +95,10 @@ typedef struct s_statistics
 int parsing(int argc, char** argv, t_option* opt, t_ping** data);
 int is_valid_number(char* arg);
 t_ping* data_new(char* domain);
+int create_first_data(t_ping** data, t_ping** tmp, char* domain);
+int create_node_data(t_ping** tmp, char* domain);
+t_ping* data_clear_node(t_ping** data);
+t_ping* data_clear_all(t_ping** data);
 char* substr(char* src, unsigned int start, size_t len);
 int get_ipv4(t_ping* data);
 int set_socket(t_option* opt, t_ping* data);
