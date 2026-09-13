@@ -3,14 +3,18 @@
 void print_query(void)
 {
   printf("Usage: ping [OPTION...] HOST ...\n");
-  printf("\n");
   printf("Send ICMP ECHO_REQUEST packets to network hosts.\n");
   printf("\n");
-  printf("Options valid for all request types:\n");
+  printf(" Options valid for all request types:\n");
   printf("\n");
   printf("  -c, --count=NUMBER         stop after sending NUMBER packets\n");
+  printf("  -i, --interval=NUMBER      wait NUMBER seconds between sending each packet\n");
   printf("      --ttl=N                specify N as time-to-live\n");
   printf("  -v, --verbose              verbose output\n");
+  printf("\n");
+  printf(" Options valid for --echo requests:\n");
+  printf("\n");
+  printf("  -?, --help                 give this help list\n");
   printf("\n");
   printf("Mandatory or optional arguments to long options are also mandatory or optional\n");
   printf("for any corresponding short options.\n");

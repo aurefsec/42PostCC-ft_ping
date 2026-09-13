@@ -2,6 +2,7 @@ NAME = ft_ping
 
 SRCS = main.c 					\
 			 parsing.c				\
+			 manage_arg.c			\
 			 utils.c					\
 			 lst_utils.c			\
 			 get_ipv4.c				\
@@ -16,7 +17,7 @@ OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 
 COMPILER = gcc
-FLAGS = -Wall -Werror -Wextra -g -lm -fsanitize=address # -lm for the sqrt() function in math.h library
+FLAGS = -Wall -Werror -Wextra -g -lm # -fsanitize=address # -lm for the sqrt() function in math.h library
 
 all: $(NAME)
 

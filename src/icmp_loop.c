@@ -19,13 +19,11 @@ int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats)
   fd_set readfds;
   stats->transmitted += 1;
 
-  for (int i = 0; 1; i++)
+  for (int i = 0; g_sigint; i++)
   {
     set_values(data, buffer, &readfds, &timeout);
     if (sendto(data->fd_socket, packet, sizeof(t_icmp), 0, (struct sockaddr*)&data->s_dst_ipv4, sizeof(struct sockaddr_in)) == -1)
       return ERROR_SENDTO;
-    if (!g_sigint)
-      break;
     if (i > 0)
       stats->transmitted += 1;
     ret = select(data->fd_socket + 1, &readfds, NULL, NULL, &timeout);
@@ -48,10 +46,9 @@ int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats)
     if ((i + 1) == opt->count)
       break;
     else
-      sleep(1);
+      sleep(opt->interval);
     if (create_update_packet(packet, UPDATE_PACKET) > 0)
       return ERROR_GETTIMEOFDAY;
   }
-  printf("coucou ret = %d\n", ret);
   return ret;
 }

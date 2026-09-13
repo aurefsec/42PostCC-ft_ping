@@ -36,8 +36,9 @@ extern int g_sigint;
 typedef struct s_option
 {
   int verbose;
-  int count;
-  int ttl;
+  long count;
+  long ttl;
+  long interval;
 } t_option;
 
 typedef struct s_ping
@@ -92,25 +93,49 @@ typedef struct s_statistics
   double stddev;
 } t_statistics;
 
+// parsing.c
 int parsing(int argc, char** argv, t_option* opt, t_ping** data);
+
+// manage_arg.c
+int count_arg(int argc, char** argv, t_option* opt, int* i, int* y);
+int interval_arg(int argc, char** argv, t_option* opt, int* i, int* y);
+int ttl_arg(int argc, char** argv, t_option* opt, int *i);
+
+// utils.c
 int is_valid_number(char* arg);
+char* substr(char* src, unsigned int start, size_t len);
+
+// lst_utils.c
 t_ping* data_new(char* domain);
 int create_first_data(t_ping** data, t_ping** tmp, char* domain);
 int create_node_data(t_ping** tmp, char* domain);
 t_ping* data_clear_node(t_ping** data);
 t_ping* data_clear_all(t_ping** data);
-char* substr(char* src, unsigned int start, size_t len);
+
+// get_ipv4.c
 int get_ipv4(t_ping* data);
+
+// set_socket.c
 int set_socket(t_option* opt, t_ping* data);
+
+// manage_packet.c
 int create_update_packet(t_icmp* packet, int action);
 int check_sender_packet(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats, char* buffer);
+
+// icmp_loop.c
 int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats);
+
+// statistics.c
 void update_statistics(t_statistics* stats, double rtt);
 void final_statistics(t_statistics* stats);
+
+// print_info.c
 void print_query(void);
 void print_before_loop(t_option* opt, t_ping* data, t_icmp* packet);
 void print_in_loop(t_option* opt, t_ping* data, t_icmp* packet, t_icmp* response, t_ip_header* ip_h);
 void print_after_loop(t_ping* data, t_statistics* stats, int ret);
+
+// print_error.c
 int print_error(int nb);
 
 #endif

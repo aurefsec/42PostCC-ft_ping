@@ -16,6 +16,7 @@ int main(int argc, char** argv)
 
   memset(&opt, 0, sizeof(opt));
   opt.count = -1;
+  opt.interval = 1;
   opt.ttl = DEFAULT_TTL_VALUE;
 
   signal(SIGINT, handler);
@@ -43,5 +44,5 @@ int main(int argc, char** argv)
 
     data = data_clear_node(&data);
   } 
-    return 0;
+  return 0;
 }
