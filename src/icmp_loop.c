@@ -12,7 +12,7 @@ void  set_values(t_ping* data, char* buffer, fd_set* readfds, struct timeval* ti
 int icmp_loop(t_option* opt, t_ping* data, t_icmp* packet, t_statistics* stats)
 {
   int ret = -1;
-  char buffer[1024];
+  char buffer[BUFFER_SIZE];
   struct timeval timeout;
   struct sockaddr_in sender;
   socklen_t sender_len = sizeof(struct sockaddr_in);
